@@ -18,20 +18,23 @@ cmake ..
 make -j"$(nproc)"
 make install
 
+# ---- Create Python virtual environment ----
+cd "$ROOT"
+rm -rf venv
+python3 -m venv venv
+
+# activate venv
+source venv/bin/activate
+
+python3 -V
+pip install --upgrade pip setuptools wheel build
+
 # ---- Build Python binding using pyproject.toml ----
 cd "$ROOT/bindings/Python"
 
-# clean old builds
 rm -rf build dist *.egg-info
-
-# ensure python-build is available (PEP517 builder)
-pip3 install --upgrade pip setuptools wheel build
-
-# build wheel
 python3 -m build
-
-# install wheel
-pip3 install dist/*.whl
+pip install dist/*.whl
 
 # ---- Run Python integration tests ----
 cd "$ROOT/tests/Python_and_core"
