@@ -1,7 +1,6 @@
 # Judger 
 
-[![Build Status](https://travis-ci.org/QingdaoU/Judger.svg?branch=newnew)](https://travis-ci.org/QingdaoU/Judger)
-
+![CI](https://github.com/gugugagaOJ/Judger/actions/workflows/test.yml/badge.svg)
 Judger for OnlineJudge 
 
 [Document](https://opensource.qduoj.com#/judger/api)
