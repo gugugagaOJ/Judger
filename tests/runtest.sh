@@ -1,16 +1,30 @@
-#! /bin/bash
+#!/usr/bin/env bash
 set -ex
-dir=$PWD
-python -V
-gcc -v
-g++ -v
 
-for py in python2 python3; do
-	cd $dir
-	rm -rf build && mkdir build && cd build && cmake ..
-	make
-	make install
-	cd ../bindings/Python && rm -rf build
-	$py setup.py install
-	cd ../../tests/Python_and_core && $py test.py
-done
+ROOT=$PWD
+
+echo "Python version:"
+python3 -V
+
+echo "GCC version:"
+gcc -v || true
+g++ -v || true
+
+# ---- Build core ----
+cd "$ROOT"
+rm -rf build && mkdir build && cd build
+
+cmake ..
+make -j$(nproc)
+make install
+
+# ---- Build Python binding ----
+cd "$ROOT/bindings/Python"
+rm -rf build dist *.egg-info
+python3 setup.py install
+
+# ---- Run Python integration tests ----
+cd "$ROOT/tests/Python_and_core"
+python3 test.py
+
+echo "All tests completed successfully."

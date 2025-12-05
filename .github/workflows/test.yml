@@ -1,0 +1,28 @@
+name: Judger CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Ubuntu 24.04 test image
+        run: |
+          docker build \
+            -t judger-test-2404 \
+            -f tests/Dockerfile-24.04 .
+
+      - name: Run Judger test suite
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/src \
+            judger-test-2404 \
+            /bin/bash -c "chmod +x tests/runtest.sh && ./tests/runtest.sh"

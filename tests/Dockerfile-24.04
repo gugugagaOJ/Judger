@@ -1,0 +1,19 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    cmake \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    libseccomp-dev \
+    gcc \
+    g++ \
+    strace \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
