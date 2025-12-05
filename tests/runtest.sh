@@ -15,16 +15,26 @@ cd "$ROOT"
 rm -rf build && mkdir build && cd build
 
 cmake ..
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 
-# ---- Build Python binding ----
+# ---- Build Python binding using pyproject.toml ----
 cd "$ROOT/bindings/Python"
+
+# clean old builds
 rm -rf build dist *.egg-info
-python3 setup.py install
+
+# ensure python-build is available (PEP517 builder)
+pip3 install --upgrade pip setuptools wheel build
+
+# build wheel
+python3 -m build
+
+# install wheel
+pip3 install dist/*.whl
 
 # ---- Run Python integration tests ----
 cd "$ROOT/tests/Python_and_core"
 python3 test.py
 
-echo "All tests completed successfully."
+echo "All tests passed successfully."
